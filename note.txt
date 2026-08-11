@@ -1,4 +1,0 @@
-npm init -y
-node server.js
- npm install express
- 
