@@ -7,21 +7,30 @@ app.use(cors());
 
 const tasks = [
   {
-    id: 1,
+    
     name: "Learn React first",
   },
   {
-    id: 2,
+   
     name: "Learn Node.js",
   },
    {
-    id: 3,
+   
     name: "Learn React pro",
   },
 ];
 
 app.get("/tasks", (req, res) => {
   res.json(tasks);
+});
+app.post("/tasks", (req, res) => {
+ console.log(req.body);
+ const task = {
+  name:req.body.name
+ };
+ tasks.push(task);
+ res.json(task);
+
 });
 
 app.listen(3000, () => {
