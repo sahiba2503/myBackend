@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 const tasks = [
   {
@@ -30,7 +31,6 @@ app.post("/tasks", (req, res) => {
  };
  tasks.push(task);
  res.json(task);
-
 });
 
 app.listen(3000, () => {
