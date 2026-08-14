@@ -1,0 +1,7 @@
+.taskcontainer{
+    display: flex;
+}
+.taskcontainer button{
+    background-color: red;
+    color:black;
+}
