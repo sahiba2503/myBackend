@@ -56,7 +56,48 @@ function App() {
 
         setTasks(tasks.filter((task) => task.id !== id));
       });
+  } // ← deleteTask ends here
+
+
+  // UPDATE method
+  function updateTask(id) {
+    // Find the task that we want to update
+    const currentTask = tasks.find((task) => task.id === id);
+
+    // Ask user for new task name
+    const newName = prompt(
+      "Enter new task name:",
+      currentTask.name
+    );
+
+    // If user presses Cancel
+    if (newName === null) {
+      return;
+    }
+
+    // Send PATCH request to server
+    fetch(`http://localhost:3000/tasks/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: newName,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+
+        // Update frontend state
+        setTasks(
+          tasks.map((task) =>
+            task.id === id ? data : task
+          )
+        );
+      });
   }
+
 
   return (
     <div>
@@ -68,7 +109,9 @@ function App() {
         onChange={(e) => setTask(e.target.value)}
       />
 
-      <button onClick={newTaskCreated}>Create</button>
+      <button onClick={newTaskCreated}>
+        Create
+      </button>
 
       <h2>Tasks</h2>
 
@@ -78,6 +121,10 @@ function App() {
 
           <button onClick={() => deleteTask(task.id)}>
             Delete
+          </button>
+
+          <button onClick={() => updateTask(task.id)}>
+            Update
           </button>
         </div>
       ))}

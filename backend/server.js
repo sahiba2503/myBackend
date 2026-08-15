@@ -59,6 +59,22 @@ app.delete("/tasks", (req, res) => {
   });
 });
 
+app.patch("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const task = tasks.find((task) => task.id === id);
+
+  if (!task) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  task.name = req.body.name;
+
+  res.json(task);
+});
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
