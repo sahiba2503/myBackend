@@ -1,12 +1,10 @@
-
-
 import { useEffect, useState } from "react";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
-  // GET method
   useEffect(() => {
     fetch("http://localhost:3000/tasks", {
       method: "GET",
@@ -15,11 +13,17 @@ function App() {
       .then((data) => {
         console.log(data);
         setTasks(data);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
       });
   }, []);
 
-  // POST method
   function newTaskCreated() {
+    if (task.trim() === "") {
+      return;
+    }
+
     fetch("http://localhost:3000/tasks", {
       method: "POST",
       headers: {
@@ -31,15 +35,17 @@ function App() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log("Created task:", data);
 
         setTasks([...tasks, data]);
 
         setTask("");
+      })
+      .catch((error) => {
+        console.log("Error:", error);
       });
   }
 
-  // DELETE method
   function deleteTask(id) {
     fetch("http://localhost:3000/tasks", {
       method: "DELETE",
@@ -52,78 +58,92 @@ function App() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log("Deleted task:", data);
 
-        setTasks(tasks.filter((task) => task.id !== id));
+        setTasks(tasks.filter((item) => item.id !== id));
+      })
+      .catch((error) => {
+        console.log("Error:", error);
       });
-  } // ← deleteTask ends here
+  }
 
-
-  // UPDATE method
   function updateTask(id) {
-    // Find the task that we want to update
-    const currentTask = tasks.find((task) => task.id === id);
+    //{ id: 2, name: "Learn Node.js" } compleate object return which is matched
+    const currentTask = tasks.find((item) => {
+      if (item.id === id) {
+        return item;
+      }
+    });
 
-    // Ask user for new task name
-    const newName = prompt(
-      "Enter new task name:",
-      currentTask.name
-    );
+    setTask(currentTask.name);
 
-    // If user presses Cancel
-    if (newName === null) {
+    setEditingId(id);
+  }
+
+  function updateExistingTask() {
+    if (task.trim() === "") {
       return;
     }
 
-    // Send PATCH request to server
-    fetch(`http://localhost:3000/tasks/${id}`, {
+    fetch(`http://localhost:3000/tasks/${editingId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: newName,
+        name: task,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log("Updated task:", data);
 
-        // Update frontend state
-        setTasks(
-          tasks.map((task) =>
-            task.id === id ? data : task
-          )
-        );
+        setTasks(tasks.map((item) => (item.id === editingId ? data : item)));
+
+        setTask("");
+
+        setEditingId(null);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
       });
   }
 
+  function cancelUpdate() {
+    setTask("");
+    setEditingId(null);
+  }
 
   return (
     <div>
       <h1>Todo App</h1>
 
       <input
-        type="text"
+        type='text'
         value={task}
+        placeholder='Enter task'
         onChange={(e) => setTask(e.target.value)}
       />
 
-      <button onClick={newTaskCreated}>
-        Create
+      <button
+        onClick={editingId !== null ? updateExistingTask : newTaskCreated}
+      >
+        {editingId !== null ? "Update" : "Create"}
       </button>
+
+      {editingId !== null && <button onClick={cancelUpdate}>Cancel</button>}
 
       <h2>Tasks</h2>
 
-      {tasks.map((task) => (
-        <div key={task.id} className="taskcontainer">
-          <p>{task.name}</p>
+      {tasks.map((item) => (
+        <div key={item.id} className='taskcontainer'>
+          <p>{item.name}</p>
 
-          <button onClick={() => deleteTask(task.id)}>
+          <button className='taskdeleteBtn' onClick={() => deleteTask(item.id)}>
             Delete
           </button>
 
-          <button onClick={() => updateTask(task.id)}>
+          <button className='taskupdateBtn' onClick={() => updateTask(item.id)}>
             Update
           </button>
         </div>

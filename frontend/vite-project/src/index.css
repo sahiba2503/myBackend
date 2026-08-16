@@ -1,7 +1,10 @@
 .taskcontainer{
     display: flex;
 }
-.taskcontainer button{
+.taskdeleteBtn{
     background-color: red;
     color:black;
+}
+.taskupdateBtn{
+    background-color: green;
 }
