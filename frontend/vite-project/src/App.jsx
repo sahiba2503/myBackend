@@ -68,17 +68,16 @@ function App() {
   }
 
   function updateTask(id) {
-    //{ id: 2, name: "Learn Node.js" } compleate object return which is matched
+  
     const currentTask = tasks.find((item) => {
       if (item.id === id) {
         return item;
       }
     });
-
     setTask(currentTask.name);
-
     setEditingId(id);
   }
+  
 
   function updateExistingTask() {
     if (task.trim() === "") {
