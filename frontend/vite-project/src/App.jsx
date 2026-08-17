@@ -114,7 +114,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="taskContainer">
       <h1>Todo App</h1>
 
       <input
