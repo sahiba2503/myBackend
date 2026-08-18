@@ -10,14 +10,17 @@ app.use(express.json());
 const tasks = [
   {
     name: "Learn React first",
+    description:"react",
     id: 1,
   },
   {
     name: "Learn Node.js",
+    description:"semester",
     id: 2,
   },
   {
     name: "Learn React pro",
+    description:"for interview",
     id: 3,
   },
 ];
@@ -32,6 +35,7 @@ app.post("/tasks", (req, res) => {
   const task = {
     name: req.body.name,
     id: tasks.length + 1,
+    description: req.body.description,
   };
 
   tasks.push(task);

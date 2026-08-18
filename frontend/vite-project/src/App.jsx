@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 function App() {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
+  const [description,setDescription] = useState("");
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ function App() {
       },
       body: JSON.stringify({
         name: task,
+        description:description,
       }),
     })
       .then((response) => response.json())
@@ -40,6 +42,7 @@ function App() {
         setTasks([...tasks, data]);
 
         setTask("");
+        setDescription("");
       })
       .catch((error) => {
         console.log("Error:", error);
@@ -123,6 +126,12 @@ function App() {
         placeholder='Enter task'
         onChange={(e) => setTask(e.target.value)}
       />
+       <input
+        type='text'
+        value={description}
+        placeholder='Enter task'
+        onChange={(e) => setDescription(e.target.value)}
+      />
 
       <button
         onClick={editingId !== null ? updateExistingTask : newTaskCreated}
@@ -136,15 +145,13 @@ function App() {
 
       {tasks.map((item) => (
         <div key={item.id} className='taskcontainer'>
-          <p>{item.name}</p>
+          <div>Task Name : {item.name}</div>
+           <div>Task description : {item.description}</div>
+           <div>
+          <button className='taskdeleteBtn' onClick={() => deleteTask(item.id)}> Delete </button>
 
-          <button className='taskdeleteBtn' onClick={() => deleteTask(item.id)}>
-            Delete
-          </button>
-
-          <button className='taskupdateBtn' onClick={() => updateTask(item.id)}>
-            Update
-          </button>
+          <button className='taskupdateBtn' onClick={() => updateTask(item.id)}>  Update </button>
+          </div>
         </div>
       ))}
     </div>

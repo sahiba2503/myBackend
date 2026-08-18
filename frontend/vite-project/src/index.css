@@ -5,6 +5,7 @@ body{
 }
 .taskcontainer{
     display: flex;
+    flex-direction: column;
 }
 .taskdeleteBtn{
     background-color: red;
