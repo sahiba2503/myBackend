@@ -1,0 +1,81 @@
+.completed-task {
+  padding: 1rem;
+  width: 100%;
+}
+
+.completed-task-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 45rem;
+  margin-bottom: 1.25rem;
+}
+
+.completed-task-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.completed-count {
+  font-size: 14px;
+  color: #666;
+}
+
+.completed-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 45rem;
+}
+
+.completed-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.completed-check {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: #28a745;
+  color: #fff;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completed-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.completed-name {
+  font-size: 17px;
+  font-weight: bold;
+  color: #888;
+  text-decoration: line-through;
+}
+
+.completed-description {
+  font-size: 14px;
+  color: #999;
+}
+
+.completed-status {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  background: #28a745;
+  color: #fff;
+}

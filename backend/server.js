@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const tasks = [
+const todos = [
   {
     name: "Learn React first",
     description:"react",
@@ -26,28 +26,28 @@ const tasks = [
 ];
 
 // GET
-app.get("/tasks", (req, res) => {
-  res.json(tasks);
+app.get("/get-todos", (req, res) => {
+  res.json(todos);
 });
 
 // POST
-app.post("/tasks", (req, res) => {
+app.post("/todos", (req, res) => {
   const task = {
     name: req.body.name,
-    id: tasks.length + 1,
+    id: todos.length + 1,
     description: req.body.description,
   };
 
-  tasks.push(task);
+  todos.push(task);
 
   res.json(task);
 });
 
 // DELETE
-app.delete("/tasks", (req, res) => {
+app.delete("/todos", (req, res) => {
   const id = Number(req.body.id);
 
-  const taskIndex = tasks.findIndex((task) => task.id === id);
+  const taskIndex = todos.findIndex((task) => task.id === id);
 
   if (taskIndex === -1) {
     return res.status(404).json({
@@ -55,7 +55,7 @@ app.delete("/tasks", (req, res) => {
     });
   }
 
-  const deletedTask = tasks.splice(taskIndex, 1);
+  const deletedTask = todos.splice(taskIndex, 1);
 
   res.json({
     message: "Task deleted successfully",
@@ -63,10 +63,10 @@ app.delete("/tasks", (req, res) => {
   });
 });
 
-app.patch("/tasks/:id", (req, res) => {
+app.patch("/todos/:id", (req, res) => {
   const id = Number(req.params.id);
 
-  const task = tasks.find((task) => task.id === id);
+  const task = todos.find((task) => task.id === id);
 
   if (!task) {
     return res.status(404).json({

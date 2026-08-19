@@ -1,0 +1,38 @@
+.header{
+    background-color: #f0f0f0;
+    padding: 20px;
+    height: 5rem;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.header-items{
+    display: flex;
+    gap:1rem;
+}
+.header-items button{
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color:white;
+    border-radius: 4px;
+}
+.header-items button:hover{
+    background-color: #0056b3;
+
+}
+.company-name{
+    font-size: 20px;
+    font-weight: bold;
+
+}
+.header-items button.active{
+    background-color: #0056b3;
+}
