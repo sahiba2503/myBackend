@@ -126,3 +126,8 @@
   border-color: #dc3545;
   color: #fff;
 }
+.icon-btn.completed:hover {
+  background-color: green;
+  border-color: #dc3545;
+  color: #fff;
+}
