@@ -40,12 +40,10 @@ const TodoTask = () => {
   function handleDeleteTask(todo) {
     setDeleteLoading(true);
     setDeletedId(todo.id);
-
     // submit api call
     const payload = {
       id: todo.id,
     };
-
     fetch("http://localhost:3000/delete-todo", {
       method: "DELETE",
       body: JSON.stringify(payload),
@@ -56,7 +54,6 @@ const TodoTask = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log({ data });
-
         if (data.success) {
           setDeleteError("");
           setDeletedId(null);
@@ -73,6 +70,7 @@ const TodoTask = () => {
         setDeleteLoading(false);
       });
   }
+  
 
   // function editTask(todo) {
   //   navigate("/add-task", {
@@ -104,7 +102,7 @@ const TodoTask = () => {
               </div>
 
               <div className="todo-actions">
-                <button className="icon-btn edit">
+                <button className="icon-btn edit"  onClick={() => handleUpdateTask(todo)}>
                   Edit
                 </button>
 

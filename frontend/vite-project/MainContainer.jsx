@@ -7,6 +7,7 @@ import { Routes, Route, Navigate } from "react-router";
 
 
 const MainContainer = () => {
+
   return (
     <div className="main-container">
       <Routes>
