@@ -37,7 +37,7 @@ function handleUpdateTask(todo) {
   function handleDeleteTask(todo) {
     setDeleteLoading(true);
     setDeletedId(todo.id);
-    // submit api call
+   
     const payload = {
       id: todo.id,
     };
@@ -68,7 +68,6 @@ function handleUpdateTask(todo) {
       });
   }
   
-
   return (
     <div className="todo-task">
       {console.log("2")}

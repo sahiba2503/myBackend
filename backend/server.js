@@ -9,8 +9,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-// Todo data
 let todos_list = [
   {
     id: 1,
@@ -101,7 +99,7 @@ app.delete("/delete-todo", (req, res) => {
     body:req.body,
     headers:req.headers,
   });
-// Get ID from request body 
+
 const id = Number(req.body.id);
 const taskIndex = todos_list.findIndex( 
   (todo) => todo.id === id );
@@ -162,7 +160,6 @@ app.patch("/edit-todo/:id", (req, res) => {
 });
 
 // START SERVER
-
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });

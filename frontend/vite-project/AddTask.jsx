@@ -1,6 +1,4 @@
 
-
-// export default AddTask;
 import  {  useState ,useEffect} from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
@@ -32,8 +30,7 @@ useEffect(() => {
          });
          }
          }, [id]);
-      
-    
+         
 
   function handleAddTask(event) {
     event.preventDefault();
@@ -41,7 +38,6 @@ useEffect(() => {
     if (loading) return;
 
     setLoading(true);
-
 
 
     if (!title || !description) {
@@ -73,7 +69,7 @@ useEffect(() => {
               console.log({ data });
 
               if (data.success) {
-                // clear the form
+              
                 setTitle("");
                 setDescription("");
                 navigate("/todo-task");
