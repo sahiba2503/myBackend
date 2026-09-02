@@ -1,12 +1,15 @@
 
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import "./todo-task.css";
 
 const TodoTask = () => {
+  const navigate = useNavigate();
   console.log("1");
 
-  // fetch - wider (default with JS)
-  // axios - popular (better but cost in terms of space)
+function handleUpdateTask(todo) {
+  navigate(`/add-task/${todo.id}`);
+}
 
   const [todos, setTodos] = useState([]);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -22,12 +25,6 @@ const TodoTask = () => {
       });
   };
 
-  // async function handleGetTodos() {
-  //   const res = await fetch("http://localhost:3000/get-todos");
-  //   const data = await res.json();
-  //   setTodos(data);
-  //   console.log(data);
-  // }
 
   useEffect(() => {
     console.log(3);
@@ -72,12 +69,6 @@ const TodoTask = () => {
   }
   
 
-  // function editTask(todo) {
-  //   navigate("/add-task", {
-  //     state: todo,
-  //   });
-  // }
-
   return (
     <div className="todo-task">
       {console.log("2")}
@@ -102,7 +93,8 @@ const TodoTask = () => {
               </div>
 
               <div className="todo-actions">
-                <button className="icon-btn edit"  onClick={() => handleUpdateTask(todo)}>
+                <button className="icon-btn edit"
+                  onClick={() => handleUpdateTask(todo)}>
                   Edit
                 </button>
 

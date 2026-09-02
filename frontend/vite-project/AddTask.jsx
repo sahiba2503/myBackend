@@ -1,16 +1,39 @@
 
 
 // export default AddTask;
-import  {  useState } from "react";
-
+import  {  useState ,useEffect} from "react";
+import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 const AddTask = () => {
   const navigate = useNavigate();
-
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+// GET SINGLE TODO WHEN EDITING 
+useEffect(() => {
+   if (id) {
+     fetch(`http://localhost:3000/get-todo/${id}`) 
+    .then((res) => res.json())
+   .then((data) => { console.log("Single todo:", data);
+     if (data.success) {
+       setTitle(data.data.name);
+       setDescription(data.data.description); 
+      }
+        else {
+           setError(data.message);
+           }
+       })
+       .catch((err) => {
+         console.log(err); 
+         setError("Something went wrong. Please try again");
+         });
+         }
+         }, [id]);
+      
+    
 
   function handleAddTask(event) {
     event.preventDefault();
@@ -66,20 +89,39 @@ const AddTask = () => {
               setLoading(false);
             });
         }, 3000);
+
       }
     }
-  }
+ if (id) {
+  fetch(`http://localhost:3000/edit-todo/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      name: title,
+      description: description,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        navigate("/todo-task");
+      } else {
+        setError(data.message);
+      }
+    })
+    .catch(() => {
+      setError("Something went wrong. Please try again");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 
-  // success ? redirect to todo-task : display error
+  return;
+}
 
-  // useEffect(() => {
-  //   if(location.todo.id) {
-  //     setTitle(title)
-  //     setDescription(desc)
-  //     setEditId(id)
-  //   }
-  // }, [location.pathname])
-
+ }
   return (
     <div className="add-task">
       <div className="add-task-card">

@@ -13,6 +13,7 @@ const MainContainer = () => {
       <Routes>
         <Route index element={<Navigate to="/add-task" />} />
         <Route path="/add-task" element={<AddTask />} />
+        <Route path="/add-task/:id" element={<AddTask />} />
         <Route path="/todo-task" element={<TodoTask />} />
         <Route
           path="/completed-task"

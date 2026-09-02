@@ -5,7 +5,6 @@ const cors = require("cors");
 
 const app = express();
 
-
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -30,10 +29,7 @@ let todos_list = [
   },
 ];
 
-
-
 // GET
-
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
@@ -46,62 +42,72 @@ app.get("/get-todos", (req, res) => {
     data: todos_list,
   });
 });
-
-
-
 // POST - Add Todo
-
+app.get("/get-todo/:id", (req, res) => {
+   const id = Number(req.params.id); 
+   const todo = todos_list.find((todo) => todo.id === id);
+    if (!todo) {
+       return res.json({
+         success: false,
+          message: "Todo not found", });
+       }
+       res.json({ success: true, data: todo, }); });
 
 app.post("/add-todo", (req, res) => {
+  console.log({body:req.body,headers:req.headers});
+  if(req.body.name && req.body.description){
+    todos_list.push({
+      
+    id: Date.now(),
+    name: req.body.name,
+    description: req.body.description  
+    });
+    res.status(201).json({success:true,message:"task added successfully"})
+  }
+  else{
+    res
+    .status(409)
+    .json({success:false,message:"name or description is missing"});
+  }
+});
+  
+
+app.patch("/edit-todo/:id", (req, res) => {
+  const id = Number(req.params.id);
+
   const { name, description } = req.body;
 
-  // Check if name and description exist
-  if (!name || !description) {
-    return res.status(400).json({
+  const todo = todos_list.find((todo) => todo.id === id);
+
+  if (!todo) {
+    return res.status(404).json({
       success: false,
-      message: "Name and description are required",
+      message: "Task not found",
     });
   }
 
-  // Check minimum length
-  if (name.length < 3 || description.length < 3) {
-    return res.status(400).json({
-      success: false,
-      message:
-        "Name and description should contain at least 3 characters",
-    });
-  }
+   todo.name = name;
+  todo.description = description;
 
-  // Create new todo
-  const newTodo = {
-    id: Date.now(),
-    name: name,
-    description: description,
-  };
-
-  // Add todo to array
-  todos_list.push(newTodo);
-
-  // Send response
-  res.status(201).json({
+  res.json({
     success: true,
-    message: "Task added successfully",
-    data: newTodo,
+    message: "Task updated successfully",
+    data: todo,
   });
 });
 
-
-
-// DELETE - Delete Todo
-
-
 app.delete("/delete-todo", (req, res) => {
-  const id = Number(req.body.id);
+  console.log({
+    body:req.body,
+    headers:req.headers,
+  });
+// Get ID from request body 
+const id = Number(req.body.id);
+const taskIndex = todos_list.findIndex( 
+  (todo) => todo.id === id );
 
-  // Find todo
-  const taskIndex = todos_list.findIndex((todo) => todo.id === id);
 
-  // If todo doesn't exist
+  //  todo doesn't exist
   if (taskIndex === -1) {
     return res.status(404).json({
       success: false,
@@ -118,13 +124,10 @@ app.delete("/delete-todo", (req, res) => {
     message: "Task deleted successfully",
     data: deletedTask[0],
   });
+
 });
 
-
-
 // PATCH - Edit Todo
-
-
 app.patch("/edit-todo/:id", (req, res) => {
   const id = Number(req.params.id);
 
@@ -158,11 +161,9 @@ app.patch("/edit-todo/:id", (req, res) => {
   });
 });
 
-
-
 // START SERVER
-
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
+
