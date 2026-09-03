@@ -10,7 +10,7 @@ function App() {
   return (
     <div>
       <Header />
-      <div>
+      <div className="main_body_container">
         <Sidenav />
         <MainContainer />
       </div>

@@ -121,11 +121,11 @@ useEffect(() => {
   return (
     <div className="add-task">
       <div className="add-task-card">
-        <div className="add-task-title">Add Task</div>
+        <h2 className="add-task-title">Add Task</h2>
 
         <form className="add-task-form">
           <div className="form-field">
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title">Task Title : </label>
 
             <input
               id="title"
@@ -140,7 +140,7 @@ useEffect(() => {
           </div>
 
           <div className="form-field">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Description : </label>
 
             <textarea
               id="description"
