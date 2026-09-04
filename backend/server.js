@@ -166,6 +166,9 @@
 
 
 
+//........................fixed this code.
+
+
 
 const express = require("express");
 const cors = require("cors");
@@ -193,28 +196,80 @@ let todos_list = [
     description: "for interview",
   },
 ];
-app.get("/get-task",(req,res)=>{
+
+// GET ALL TASKS
+app.get("/get-task", (req, res) => {
   res.json(todos_list);
-})
-  app.post("/create-task",(req,res)=>{
-    const task = {
-      name:req.body.name,
-      description:req.body.description,
-      id:todos_list.length + 1,
-    }
-    todos_list.push(task);
-    res.json(todos_list);
-  })
+});
 
-app.delete("/delete-task",(req,res)=>{
-  id = Number(req.body.key);
-  todos_list = todos_list.filter((item)=>{
-    return (item.id !== id)
-  })
- 
-   res.json(todos_list);
-})
+// GET ONE TASK
+app.get("/get-task/:id", (req, res) => {
+  const id = Number(req.params.id);
 
+  const todo = todos_list.find((task) => task.id === id);
+
+  if (!todo) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  res.json(todo);
+});
+
+// CREATE TASK
+app.post("/create-task", (req, res) => {
+  const task = {
+    name: req.body.name,
+    description: req.body.description,
+    id: todos_list.length + 1,
+  };
+
+  todos_list.push(task);
+
+  res.json(todos_list);
+});
+
+// DELETE TASK
+app.delete("/delete-task", (req, res) => {
+  const id = Number(req.body.key);
+
+  const task = todos_list.find((task) => task.id === id);
+
+  if (!task) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  todos_list = todos_list.filter((item) => item.id !== id);
+
+  res.json(todos_list);
+});
+
+// UPDATE TASK
+app.patch("/task/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const todo = todos_list.find((task) => task.id === id);
+
+  if (!todo) {
+    return res.status(404).json({
+      message: "Task not found",
+    });
+  }
+
+  // Update existing task
+  todo.name = req.body.name;
+  todo.description = req.body.description;
+
+  res.json({
+    message: "Task updated successfully",
+    data: todo,
+  });
+});
+
+// START SERVER
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });

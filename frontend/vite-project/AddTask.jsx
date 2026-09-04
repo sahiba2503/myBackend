@@ -184,8 +184,9 @@
 // export default AddTask;
 
 import { useState ,useEffect} from "react";
-import { useLocation } from "react-router";
+import { useLocation ,useNavigate } from "react-router";
 const AddTask = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [tasks,setTasks] = useState([]);
   useEffect(()=>{
@@ -211,13 +212,10 @@ function DeletedTask(id) {
         } )
     .catch((error) => console.log(error));
 }
-// function DeletedTask(id) {
-//   fetch(`http://localhost:3000/delete-task/${id}`, {
-//     method: "DELETE",
-//   })
-//     .then((res) => res.json())
-//     .then((data) => console.log(data));
-// }
+function UpdateTask(id){
+    navigate(`/task/${id}`);
+
+}
 
   return (
     <div className="add-task">
@@ -226,6 +224,7 @@ function DeletedTask(id) {
         return <div key={item.id}> <h4>{item.name}</h4>
         <b>{item.description}</b>
          <button onClick={()=>DeletedTask(item.id)}>delete</button>
+          <button onClick={()=>UpdateTask(item.id)}>create</button>
         </div>
        
       })}</div>

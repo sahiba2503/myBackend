@@ -124,40 +124,107 @@
 
 // export default TodoTask;
 
-import  { useState } from "react";
+import { useEffect, useState } from "react";
 import "./todo-task.css";
+import { useNavigate, useParams } from "react-router";
 
 const TodoTask = () => {
+  const [tasks, setTasks] = useState([]);
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
-    
-   function CreateTask(e){
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Get all tasks
+  useEffect(() => {
+    fetch("http://localhost:3000/get-task")
+      .then((response) => response.json())
+      .then((data) => setTasks(data));
+  }, []);
+
+  // If id exists, get that task for updating ........"Server, give me only the task whose ID is 2."
+  useEffect(() => {
+    if (id) {
+      fetch(`http://localhost:3000/get-task/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setTaskTitle(data.name);
+          setTaskDescription(data.description);
+        });
+    }
+  }, [id]);
+
+  function CreateTask(e) {
     e.preventDefault();
-       const task = {
-        name:taskTitle,
-        description:taskDescription,
-       }
-       
-      fetch("http://localhost:3000/create-task", {
-    method: "POST",
-    headers: {
-        "content-type": "application/json"
-    },
-    body: JSON.stringify(task)
-})
-.then((response)=>response.json())
- .then((data)=> console.log(data)  )
-setTaskTitle("");
-setTaskDescription("");
-   }
+
+    const task = {
+      name: taskTitle,
+      description: taskDescription,
+    };
+
+    // UPDATE
+    if (id) {
+      fetch(`http://localhost:3000/task/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Updated:", data);
+
+          setTaskTitle("");
+          setTaskDescription("");
+
+          navigate("/task");
+        });
+
+      return;
+    }
+
+    // CREATE
+    fetch("http://localhost:3000/create-task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Created:", data);
+
+        setTaskTitle("");
+        setTaskDescription("");
+
+        navigate("/task");
+      });
+  }
+
   return (
     <div className="todo-task">
-             <h3> hello task component </h3>   
-             <form >
-              <input placeholder="Enter task"  value = {taskTitle} onChange={(e)=>setTaskTitle(e.target.value)}></input>
-              <input placeholder="Enter task description"  value = {taskDescription} onChange={(e)=>setTaskDescription(e.target.value)}></input>
-              <button onClick={CreateTask}>create</button>
-             </form>
+      <h3>{id ? "Update Task" : "Create Task"}</h3>
+
+      <form>
+        <input
+          placeholder="Enter task"
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
+        />
+
+        <input
+          placeholder="Enter task description"
+          value={taskDescription}
+          onChange={(e) => setTaskDescription(e.target.value)}
+        />
+
+        <button onClick={CreateTask}>
+          {id ? "Update" : "Create"}
+        </button>
+      </form>
     </div>
   );
 };
