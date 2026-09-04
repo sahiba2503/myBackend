@@ -101,11 +101,8 @@
 //                 <button
 //                   className="icon-btn delete"
 //                   onClick={() => handleDeleteTask(todo)}
-//                   disabled={deleteLoading}
-//                 >
-//                   {todo.id === deletedId && deleteLoading
-//                     ? "Deleting"
-//                     : "Delete"}
+//                   disabled={deleteLoading}  >
+//                   {todo.id === deletedId && deleteLoading ? "Deleting"  : "Delete"}
 //                 </button>
 //               </div>
 
@@ -132,6 +129,7 @@ const TodoTask = () => {
   const [tasks, setTasks] = useState([]);
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
+  const [loading , setLoading] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -146,18 +144,22 @@ const TodoTask = () => {
   // If id exists, get that task for updating ........"Server, give me only the task whose ID is 2."
   useEffect(() => {
     if (id) {
+     
       fetch(`http://localhost:3000/get-task/${id}`)
         .then((response) => response.json())
         .then((data) => {
           setTaskTitle(data.name);
           setTaskDescription(data.description);
+         
         });
     }
   }, [id]);
-
   function CreateTask(e) {
-    e.preventDefault();
+  e.preventDefault();
 
+  setLoading(true);
+
+  setTimeout(() => {
     const task = {
       name: taskTitle,
       description: taskDescription,
@@ -179,7 +181,12 @@ const TodoTask = () => {
           setTaskTitle("");
           setTaskDescription("");
 
+          setLoading(false);
           navigate("/task");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
         });
 
       return;
@@ -200,9 +207,17 @@ const TodoTask = () => {
         setTaskTitle("");
         setTaskDescription("");
 
+        setLoading(false);
         navigate("/task");
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
       });
-  }
+  }, 2000);
+}
+
+ 
 
   return (
     <div className="todo-task">
@@ -220,10 +235,12 @@ const TodoTask = () => {
           value={taskDescription}
           onChange={(e) => setTaskDescription(e.target.value)}
         />
-
-        <button onClick={CreateTask}>
-          {id ? "Update" : "Create"}
+         
+        <button onClick={CreateTask}  disabled={loading}>
+          {loading ? "loading.." : "Click"}
+          
         </button>
+
       </form>
     </div>
   );

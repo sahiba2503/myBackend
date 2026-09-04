@@ -189,6 +189,8 @@ const AddTask = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [tasks,setTasks] = useState([]);
+  const [deleteId,setDeleteId] = useState(0);
+  const [loading, setLoading] = useState(false);
   useEffect(()=>{
     fetch("http://localhost:3000/get-task")
     .then((response)=>response.json())
@@ -197,20 +199,32 @@ const AddTask = () => {
 
 
 function DeletedTask(id) {
-  fetch("http://localhost:3000/delete-task", {
+    setLoading(true);
+    setDeleteId(id);
+
+  setTimeout(()=>{
+fetch("http://localhost:3000/delete-task", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      key: id
+      key: id,
     })
   })
     .then((res) => res.json())
     .then((data) => {console.log(data)
             setTasks(data);
+            setLoading(false);
+            setDeleteId(0);
         } )
-    .catch((error) => console.log(error));
+    .catch((error) =>{
+      console.log(error)
+       setLoading(false);
+        setDeleteId(0);
+    } );
+  },2000);
+  
 }
 function UpdateTask(id){
     navigate(`/task/${id}`);
@@ -223,8 +237,9 @@ function UpdateTask(id){
       <div >{tasks.map((item)=>{
         return <div key={item.id}> <h4>{item.name}</h4>
         <b>{item.description}</b>
-         <button onClick={()=>DeletedTask(item.id)}>delete</button>
-          <button onClick={()=>UpdateTask(item.id)}>create</button>
+         <button onClick={()=>DeletedTask(item.id)}  disabled={item.id === deleteId && loading} >   {item.id === deleteId && loading ? "Deleting"  : "Delete"} </button>
+        
+          <button onClick={()=>UpdateTask(item.id)} > update</button>
         </div>
        
       })}</div>
