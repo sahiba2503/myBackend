@@ -184,7 +184,7 @@
 // export default AddTask;
 
 import { useState ,useEffect} from "react";
-import { useLocation ,useNavigate } from "react-router";
+import { useLocation ,useNavigate } from "react-router-dom";
 const AddTask = () => {
   const navigate = useNavigate();
   const location = useLocation();
