@@ -156,9 +156,11 @@ const TodoTask = () => {
   }, [id]);
   function CreateTask(e) {
   e.preventDefault();
+if(taskTitle.trim() === "" || taskDescription.trim() === "") {
+return;
+}
 
-  setLoading(true);
-
+setLoading(true);
   setTimeout(() => {
     const task = {
       name: taskTitle,
@@ -215,6 +217,8 @@ const TodoTask = () => {
         setLoading(false);
       });
   }, 2000);
+
+  
 }
 
  
