@@ -1,4 +1,3 @@
-
 // import  { useEffect, useState } from "react";
 // import { useNavigate } from "react-router";
 // import "./todo-task.css";
@@ -26,7 +25,6 @@
 //       });
 //   };
 
-
 //   useEffect(() => {
 //     console.log(3);
 //     handleGetTodos();
@@ -38,7 +36,7 @@
 //   function handleDeleteTask(todo) {
 //     setDeleteLoading(true);
 //     setDeletedId(todo.id);
-   
+
 //     const payload = {
 //       id: todo.id,
 //     };
@@ -68,7 +66,7 @@
 //         setDeleteLoading(false);
 //       });
 //   }
-  
+
 //   return (
 //     <div className="todo-task">
 //       {console.log("2")}
@@ -129,7 +127,7 @@ const TodoTask = () => {
   const [tasks, setTasks] = useState([]);
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -144,33 +142,57 @@ const TodoTask = () => {
   // If id exists, get that task for updating ........"Server, give me only the task whose ID is 2."
   useEffect(() => {
     if (id) {
-     
       fetch(`http://localhost:3000/get-task/${id}`)
         .then((response) => response.json())
         .then((data) => {
           setTaskTitle(data.name);
           setTaskDescription(data.description);
-         
         });
     }
   }, [id]);
   function CreateTask(e) {
-  e.preventDefault();
-if(taskTitle.trim() === "" || taskDescription.trim() === "") {
-return;
-}
+    e.preventDefault();
+    if (taskTitle.trim() === "" || taskDescription.trim() === "") {
+      return;
+    }
 
-setLoading(true);
-  setTimeout(() => {
-    const task = {
-      name: taskTitle,
-      description: taskDescription,
-    };
+    setLoading(true);
+    setTimeout(() => {
+      const task = {
+        name: taskTitle,
+        description: taskDescription,
+      };
 
-    // UPDATE
-    if (id) {
-      fetch(`http://localhost:3000/task/${id}`, {
-        method: "PATCH",
+      // UPDATE
+      if (id) {
+        fetch(`http://localhost:3000/task/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(task),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Updated:", data);
+
+            setTaskTitle("");
+            setTaskDescription("");
+
+            setLoading(false);
+            navigate("/task");
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
+
+        return;
+      }
+
+      // CREATE
+      fetch("http://localhost:3000/create-task", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -178,73 +200,41 @@ setLoading(true);
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Updated:", data);
+          console.log("Created:", data);
 
           setTaskTitle("");
           setTaskDescription("");
 
           setLoading(false);
-          navigate("/task");
+          navigate("/todos");
         })
         .catch((error) => {
           console.log(error);
           setLoading(false);
         });
-
-      return;
-    }
-
-    // CREATE
-    fetch("http://localhost:3000/create-task", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(task),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Created:", data);
-
-        setTaskTitle("");
-        setTaskDescription("");
-
-        setLoading(false);
-        navigate("/task");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
-  }, 2000);
-
-  
-}
-
- 
+    }, 2000);
+  }
 
   return (
-    <div className="todo-task">
+    <div className='todo-task'>
       <h3>{id ? "Update Task" : "Create Task"}</h3>
 
       <form>
         <input
-          placeholder="Enter task"
+          placeholder='Enter task'
           value={taskTitle}
           onChange={(e) => setTaskTitle(e.target.value)}
         />
 
         <input
-          placeholder="Enter task description"
+          placeholder='Enter task description'
           value={taskDescription}
           onChange={(e) => setTaskDescription(e.target.value)}
         />
-         
-        <button onClick={CreateTask}  disabled={loading}>
-          {loading ? "loading.." : "Click"}
-          
-        </button>
 
+        <button onClick={CreateTask} disabled={loading}>
+          {loading ? "loading.." : "Click"}
+        </button>
       </form>
     </div>
   );
