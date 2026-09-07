@@ -1,3 +1,210 @@
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+let todos_list = [
+  {
+    id: 1,
+    name: "Learn React first",
+    description: "react",
+  },
+  {
+    id: 2,
+    name: "Learn Node.js",
+    description: "semester",
+  },
+  {
+    id: 3,
+    name: "Learn React pro",
+    description: "for interview",
+  },
+];
+
+// GET
+
+app.get("/", (req, res) => {
+  res.send("<h1>Hello World!</h1>");
+});
+
+app.get("/get-todos", (req, res) => {
+  res.json({
+    success: true,
+    data: todos_list,
+  });
+});
+//POST - Add Todo
+app.get("/get-todo/:id", (req, res) => {
+   const id = Number(req.params.id); 
+   const todo = todos_list.find((todo) => todo.id === id);
+    if (!todo) {
+       return res.json({
+         success: false,
+          message: "Todo not found", });
+       }
+       res.json({ success: true, data: todo, }); });
+
+app.post("/add-todo", (req, res) => {
+  console.log({body:req.body,headers:req.headers});
+  if(req.body.name && req.body.description){
+    todos_list.push({
+      
+    id: Date.now(),
+    name: req.body.name,
+    description: req.body.description  
+    });
+    res.status(201).json({success:true,message:"task added successfully"})
+  }
+  else{
+    res
+    .status(409)
+    .json({success:false,message:"name or description is missing"});
+  }
+});
+  
+
+// app.patch("/edit-todo/:id", (req, res) => {
+//   const id = Number(req.params.id);
+//   const { name, description } = req.body;
+// todos_list = todos_list.map((item)=>{
+//   if(item.id === id){
+//     return {...item, name:name, description:description};
+//   }
+//   else{
+//     return item;
+//   }
+// })
+//   // const todo = todos_list.find((todo) => todo.id === id);
+// //todo is an object.
+//   if (!todo) {
+//     return res.status(404).json({
+//       success: false,
+//       message: "Task not found",
+//     });
+//   }
+//   //  todo.name = name;
+//   // todo.description = description;
+//   res.json({
+//     success: true,
+//     message: "Task updated successfully",
+//     data: todo,
+//   });
+// });
+app.patch("/edit-todo/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const { name, description } = req.body;
+
+  // Update the task
+  todos_list = todos_list.map((item) => {
+    if (item.id === id) {
+      return {
+        ...item,
+        name: name,
+        description: description
+      };
+    } else {
+      return item;
+    }
+  });
+
+  // Find the updated task
+  const todo = todos_list.find((item) => item.id === id);
+
+  // If task doesn't exist
+  if (!todo) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found"
+    });
+  }
+
+  // Send response
+  res.json({
+    success: true,
+    message: "Task updated successfully",
+    data: todo
+  });
+});
+
+app.delete("/delete-todo", (req, res) => {
+  console.log({
+    body:req.body,
+    headers:req.headers,
+  });
+
+const id = Number(req.body.id);
+const taskIndex = todos_list.findIndex( 
+  (todo) => todo.id === id );
+
+
+  //  todo doesn't exist
+  if (taskIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  // Delete todo
+  const deletedTask = todos_list.splice(taskIndex, 1);
+
+  // Send response
+  res.json({
+    success: true,
+    message: "Task deleted successfully",
+    data: deletedTask[0],
+  });
+
+});
+
+// PATCH - Edit Todo
+app.patch("/edit-todo/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const { name, description } = req.body;
+
+  // Find todo
+  const todo = todos_list.find((todo) => todo.id === id);
+
+  // If todo doesn't exist
+  if (!todo) {
+    return res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+  }
+
+  // Update values
+  if (name) {
+    todo.name = name;
+  }
+
+  if (description) {
+    todo.description = description;
+  }
+
+  // Send response
+  res.json({
+    success: true,
+    message: "Task updated successfully",
+    data: todo,
+  });
+});
+
+// START SERVER
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
+
+
+
+//........................fixed this code.
+
 
 
 // const express = require("express");
@@ -27,133 +234,73 @@
 //   },
 // ];
 
-// // GET
-
-// app.get("/", (req, res) => {
-//   res.send("<h1>Hello World!</h1>");
+// // GET ALL TASKS
+// app.get("/get-task", (req, res) => {
+//   res.json(todos_list);
 // });
 
+// // GET ONE TASK
+// app.get("/get-task/:id", (req, res) => {
+//   const id = Number(req.params.id);
 
-// app.get("/get-todos", (req, res) => {
-//   res.json({
-//     success: true,
-//     data: todos_list,
-//   });
+//   const todo = todos_list.find((task) => task.id === id);
+
+//   if (!todo) {
+//     return res.status(404).json({
+//       message: "Task not found",
+//     });
+//   }
+
+//   res.json(todo);
 // });
-// //POST - Add Todo
-// app.get("/get-todo/:id", (req, res) => {
-//    const id = Number(req.params.id); 
-//    const todo = todos_list.find((todo) => todo.id === id);
-//     if (!todo) {
-//        return res.json({
-//          success: false,
-//           message: "Todo not found", });
-//        }
-//        res.json({ success: true, data: todo, }); });
 
-// app.post("/add-todo", (req, res) => {
-//   console.log({body:req.body,headers:req.headers});
-//   if(req.body.name && req.body.description){
-//     todos_list.push({
-      
-//     id: Date.now(),
+// // CREATE TASK
+// app.post("/create-task", (req, res) => {
+//   const task = {
 //     name: req.body.name,
-//     description: req.body.description  
-//     });
-//     res.status(201).json({success:true,message:"task added successfully"})
-//   }
-//   else{
-//     res
-//     .status(409)
-//     .json({success:false,message:"name or description is missing"});
-//   }
-// });
-  
+//     description: req.body.description,
+//     id: todos_list.length + 1,
+//   };
 
-// app.patch("/edit-todo/:id", (req, res) => {
+//   todos_list.push(task);
+
+//   res.json(todos_list);
+// });
+
+// // DELETE TASK
+// app.delete("/delete-task", (req, res) => {
+//   const id = Number(req.body.key);
+
+//   const task = todos_list.find((task) => task.id === id);
+
+//   if (!task) {
+//     return res.status(404).json({
+//       message: "Task not found",
+//     });
+//   }
+
+//   todos_list = todos_list.filter((item) => item.id !== id);
+
+//   res.json(todos_list);
+// });
+
+// // UPDATE TASK
+// app.patch("/task/:id", (req, res) => {
 //   const id = Number(req.params.id);
 
-//   const { name, description } = req.body;
+//   const todo = todos_list.find((task) => task.id === id);
 
-//   const todo = todos_list.find((todo) => todo.id === id);
-// //todo is an object.
 //   if (!todo) {
 //     return res.status(404).json({
-//       success: false,
 //       message: "Task not found",
 //     });
 //   }
 
-//    todo.name = name;
-//   todo.description = description;
+//   // Update existing task
+//   todo.name = req.body.name;
+//   todo.description = req.body.description;
 
 //   res.json({
-//     success: true,
-//     message: "Task updated successfully",
-//     data: todo,
-//   });
-// });
-
-// app.delete("/delete-todo", (req, res) => {
-//   console.log({
-//     body:req.body,
-//     headers:req.headers,
-//   });
-
-// const id = Number(req.body.id);
-// const taskIndex = todos_list.findIndex( 
-//   (todo) => todo.id === id );
-
-
-//   //  todo doesn't exist
-//   if (taskIndex === -1) {
-//     return res.status(404).json({
-//       success: false,
-//       message: "Task not found",
-//     });
-//   }
-
-//   // Delete todo
-//   const deletedTask = todos_list.splice(taskIndex, 1);
-
-//   // Send response
-//   res.json({
-//     success: true,
-//     message: "Task deleted successfully",
-//     data: deletedTask[0],
-//   });
-
-// });
-
-// // PATCH - Edit Todo
-// app.patch("/edit-todo/:id", (req, res) => {
-//   const id = Number(req.params.id);
-
-//   const { name, description } = req.body;
-
-//   // Find todo
-//   const todo = todos_list.find((todo) => todo.id === id);
-
-//   // If todo doesn't exist
-//   if (!todo) {
-//     return res.status(404).json({
-//       success: false,
-//       message: "Task not found",
-//     });
-//   }
-
-//   // Update values
-//   if (name) {
-//     todo.name = name;
-//   }
-
-//   if (description) {
-//     todo.description = description;
-//   }
-
-//   // Send response
-//   res.json({
-//     success: true,
 //     message: "Task updated successfully",
 //     data: todo,
 //   });
@@ -163,116 +310,6 @@
 // app.listen(3000, () => {
 //   console.log("Server is running on port 3000");
 // });
-
-
-
-//........................fixed this code.
-
-
-
-const express = require("express");
-const cors = require("cors");
-
-const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-let todos_list = [
-  {
-    id: 1,
-    name: "Learn React first",
-    description: "react",
-  },
-  {
-    id: 2,
-    name: "Learn Node.js",
-    description: "semester",
-  },
-  {
-    id: 3,
-    name: "Learn React pro",
-    description: "for interview",
-  },
-];
-
-// GET ALL TASKS
-app.get("/get-task", (req, res) => {
-  res.json(todos_list);
-});
-
-// GET ONE TASK
-app.get("/get-task/:id", (req, res) => {
-  const id = Number(req.params.id);
-
-  const todo = todos_list.find((task) => task.id === id);
-
-  if (!todo) {
-    return res.status(404).json({
-      message: "Task not found",
-    });
-  }
-
-  res.json(todo);
-});
-
-// CREATE TASK
-app.post("/create-task", (req, res) => {
-  const task = {
-    name: req.body.name,
-    description: req.body.description,
-    id: todos_list.length + 1,
-  };
-
-  todos_list.push(task);
-
-  res.json(todos_list);
-});
-
-// DELETE TASK
-app.delete("/delete-task", (req, res) => {
-  const id = Number(req.body.key);
-
-  const task = todos_list.find((task) => task.id === id);
-
-  if (!task) {
-    return res.status(404).json({
-      message: "Task not found",
-    });
-  }
-
-  todos_list = todos_list.filter((item) => item.id !== id);
-
-  res.json(todos_list);
-});
-
-// UPDATE TASK
-app.patch("/task/:id", (req, res) => {
-  const id = Number(req.params.id);
-
-  const todo = todos_list.find((task) => task.id === id);
-
-  if (!todo) {
-    return res.status(404).json({
-      message: "Task not found",
-    });
-  }
-
-  // Update existing task
-  todo.name = req.body.name;
-  todo.description = req.body.description;
-
-  res.json({
-    message: "Task updated successfully",
-    data: todo,
-  });
-});
-
-// START SERVER
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
 
 
 
