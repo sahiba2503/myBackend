@@ -2,9 +2,11 @@
 
 //बस इतना समझ लो: "Browser, apna default kaam mat karo; main JavaScript se handle karunga." 👍
 //I use event.preventDefault() to stop the browser's default action.
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
 const AddTask = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -20,7 +22,7 @@ const AddTask = () => {
       fetch(`http://localhost:3000/get-todo/${id}`)
         .then((res) => res.json())
         .then((data) => {
-          console.log("Single todo:", data);
+          console.log("Single todo's data:", data);
           if (data.success) {
             setTitle(data.data.name);
             setDescription(data.data.description);
@@ -37,26 +39,31 @@ const AddTask = () => {
 
   function handleAddTask(event) {
     event.preventDefault();
-   
+
     if (loading) {
       return;
     }
-       setLoading(true);
+
+    setLoading(true);
+    //If the title or description is empty
     if (!title || !description) {
       setError("Title and Description are required to add a task");
       setLoading(false);
       return;
     }
-
+    //if the title or description has less than 3 characters,
     if (title.length < 3 || description.length < 3) {
       setError("Title and Description should contain at least 3 characters.");
       setLoading(false);
       return;
-    } else {
+    }
+    //If the data is valid,  create ...
+    else {
       const payload = {
         description,
         name: title,
       };
+      //If the `id` exists, *update an existing task
       if (id) {
         fetch(`http://localhost:3000/edit-todo/${id}`, {
           method: "PATCH",
@@ -79,12 +86,14 @@ const AddTask = () => {
           .catch(() => {
             setError("Something went wrong. Please try again");
           })
+
           .finally(() => {
             setLoading(false);
           });
-
         return;
-      } else {
+      }
+      //If the id does not exist, 
+       else {
         fetch("http://localhost:3000/add-todo", {
           method: "POST",
           body: JSON.stringify(payload),
@@ -92,7 +101,9 @@ const AddTask = () => {
             "Content-Type": "application/json",
           },
         })
+        // convert response into JavaScript data.
           .then((res) => res.json())
+          
           .then((data) => {
             console.log({ data });
 
@@ -100,7 +111,8 @@ const AddTask = () => {
               setTitle("");
               setDescription("");
               navigate("/todo-task");
-            } else {
+            } 
+            else {
               setError(data.message);
             }
           })
@@ -119,16 +131,21 @@ const AddTask = () => {
     <div className='add-task'>
       <div className='add-task-card'>
         <h2 className='add-task-title'>{id ? "Edit Task" : "Add Task"}</h2>
+
         <form className='add-task-form'>
           <div className='form-field'>
             <label htmlFor='title'>Task Title : </label>
+
             <input
               id='title'
               type='text'
               placeholder='Enter task title'
               value={title}
-              onChange={(event) => { 
-              setError("");  setTitle(event.target.value);   }} />
+              onChange={(event) => {
+                setError("");
+                setTitle(event.target.value);
+              }}
+            />
           </div>
 
           <div className='form-field'>
@@ -167,7 +184,6 @@ const AddTask = () => {
     </div>
   );
 };
-
 export default AddTask;
 //setLoading()how to manage.
 //?how work data.message

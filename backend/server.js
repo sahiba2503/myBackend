@@ -39,61 +39,30 @@ app.get("/get-todos", (req, res) => {
 });
 //POST - Add Todo
 app.get("/get-todo/:id", (req, res) => {
-   const id = Number(req.params.id); 
-   const todo = todos_list.find((todo) => todo.id === id);
-    if (!todo) {
-       return res.json({
-         success: false,
-          message: "Todo not found", });
-       }
-       res.json({ success: true, data: todo, }); });
+  const id = Number(req.params.id);
+  const todo = todos_list.find((todo) => todo.id === id);
+  if (!todo) {
+    return res.json({ success: false, message: "Todo not found" });
+  }
+  res.json({ success: true, data: todo });
+});
 
 app.post("/add-todo", (req, res) => {
-  console.log({body:req.body,headers:req.headers});
-  if(req.body.name && req.body.description){
+  console.log({ body: req.body, headers: req.headers });
+  if (req.body.name && req.body.description) {
     todos_list.push({
-      
-    id: Date.now(),
-    name: req.body.name,
-    description: req.body.description  
+      id: Date.now(),
+      name: req.body.name,
+      description: req.body.description,
     });
-    res.status(201).json({success:true,message:"task added successfully"})
-  }
-  else{
+    res.status(201).json({ success: true, message: "task added successfully" });
+  } else {
     res
-    .status(409)
-    .json({success:false,message:"name or description is missing"});
+      .status(409)
+      .json({ success: false, message: "name or description is missing" });
   }
 });
-  
 
-// app.patch("/edit-todo/:id", (req, res) => {
-//   const id = Number(req.params.id);
-//   const { name, description } = req.body;
-// todos_list = todos_list.map((item)=>{
-//   if(item.id === id){
-//     return {...item, name:name, description:description};
-//   }
-//   else{
-//     return item;
-//   }
-// })
-//   // const todo = todos_list.find((todo) => todo.id === id);
-// //todo is an object.
-//   if (!todo) {
-//     return res.status(404).json({
-//       success: false,
-//       message: "Task not found",
-//     });
-//   }
-//   //  todo.name = name;
-//   // todo.description = description;
-//   res.json({
-//     success: true,
-//     message: "Task updated successfully",
-//     data: todo,
-//   });
-// });
 app.patch("/edit-todo/:id", (req, res) => {
   const id = Number(req.params.id);
 
@@ -104,8 +73,8 @@ app.patch("/edit-todo/:id", (req, res) => {
     if (item.id === id) {
       return {
         ...item,
-        name: name,
-        description: description
+        name,
+        description,
       };
     } else {
       return item;
@@ -115,32 +84,26 @@ app.patch("/edit-todo/:id", (req, res) => {
   // Find the updated task
   const todo = todos_list.find((item) => item.id === id);
 
-  // If task doesn't exist
   if (!todo) {
-    return res.status(404).json({
-      success: false,
-      message: "Task not found"
-    });
+    return res.status(404).json({ success: false, message: "Task not found" });
   }
 
   // Send response
   res.json({
     success: true,
     message: "Task updated successfully",
-    data: todo
+    data: todo,
   });
 });
 
 app.delete("/delete-todo", (req, res) => {
   console.log({
-    body:req.body,
-    headers:req.headers,
+    body: req.body,
+    headers: req.headers,
   });
 
-const id = Number(req.body.id);
-const taskIndex = todos_list.findIndex( 
-  (todo) => todo.id === id );
-
+  const id = Number(req.body.id);
+  const taskIndex = todos_list.findIndex((todo) => todo.id === id);
 
   //  todo doesn't exist
   if (taskIndex === -1) {
@@ -159,7 +122,6 @@ const taskIndex = todos_list.findIndex(
     message: "Task deleted successfully",
     data: deletedTask[0],
   });
-
 });
 
 // PATCH - Edit Todo
@@ -201,11 +163,7 @@ app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
 
-
-
 //........................fixed this code.
-
-
 
 // const express = require("express");
 // const cors = require("cors");
@@ -310,6 +268,3 @@ app.listen(3000, () => {
 // app.listen(3000, () => {
 //   console.log("Server is running on port 3000");
 // });
-
-
-
