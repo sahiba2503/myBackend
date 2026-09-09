@@ -214,15 +214,20 @@ app.listen(3000, () => {
 
 // // CREATE TASK
 // app.post("/create-task", (req, res) => {
-//   const task = {
+  //if(req.body.name && req.body.description){
+//   //   todos_list.push({
 //     name: req.body.name,
 //     description: req.body.description,
 //     id: todos_list.length + 1,
-//   };
+//   });
+// res.status(201).json({ success: true, message: "task added successfully" });
+//else{
+   //res.status(409).json({ success: false, message: "some things is wrong plese try again" });
+  //}
+  //}
 
-//   todos_list.push(task);
 
-//   res.json(todos_list);
+
 // });
 
 // // DELETE TASK

@@ -1,3 +1,122 @@
+/* Main container */
+.add-task {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f6fa;
+  padding: 20px;
+}
+
+/* Form card */
+.add-task-card {
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.add-task-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+  color: #333;
+}
+
+/* Form */
+.add-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Each field */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Labels */
+.form-field label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input and textarea */
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* Focus effect */
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+/* Textarea */
+.form-field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Buttons container */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+/* Common button style */
+.btn {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Cancel button */
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
+/* Save button */
+.btn-primary {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #4338ca;
+}
+
+/* Disabled button */
+.btn-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+
 .todo-task {
   padding: 1rem;
   width: 100%;

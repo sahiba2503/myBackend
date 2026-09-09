@@ -1,11 +1,12 @@
 //We use event.preventDefault() so that the browser does not submit the form automatically, and React can handle the form and send the API request.
 
-//बस इतना समझ लो: "Browser, apna default kaam mat karo; main JavaScript se handle karunga." 👍
+//बस इतना समझ लो: "Browser, apna default kaam mat karo; main JavaScript se handle karunga." 
 //I use event.preventDefault() to stop the browser's default action.
 
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import "./todo-task.css";
 
 const AddTask = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const AddTask = () => {
         description,
         name: title,
       };
-      //If the `id` exists, *update an existing task
+      //If the `id` exists, *update 
       if (id) {
         fetch(`http://localhost:3000/edit-todo/${id}`, {
           method: "PATCH",
@@ -76,6 +77,7 @@ const AddTask = () => {
           },
         })
           .then((res) => res.json())
+
           .then((data) => {
             if (data.success) {
               navigate("/todo-task");
@@ -126,7 +128,12 @@ const AddTask = () => {
         return;
       }
     }
+    
   }
+  function ClearTask(){
+      setTitle("");
+      setDescription("");
+    }
   return (
     <div className='add-task'>
       <div className='add-task-card'>
@@ -166,7 +173,7 @@ const AddTask = () => {
           {error ? error : ""}
 
           <div className='form-actions'>
-            <button type='button' className='btn btn-secondary'>
+            <button type='button' className='btn btn-secondary' onClick={ClearTask}>
               Cancel
             </button>
 

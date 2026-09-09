@@ -1,5 +1,5 @@
 //success,message comes from the server response
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./todo-task.css";
 
@@ -7,10 +7,10 @@ const TodoTask = () => {
   const navigate = useNavigate();
   console.log("1");
 
-function handleUpdateTask(todo) {
-  navigate(`/add-task/${todo.id}`);
-  // navigate(`/taskUpdated/${todo.id}`);
-}
+  function handleUpdateTask(todo) {
+    navigate(`/add-task/${todo.id}`);
+    // navigate(`/taskUpdated/${todo.id}`);
+  }
 
   const [todos, setTodos] = useState([]);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -69,46 +69,45 @@ function handleUpdateTask(todo) {
   }
 
   return (
-    <div className="todo-task">
+    <div className='todo-task'>
       {console.log("2")}
 
-      <div className="todo-task-header">
-        <div className="todo-task-title">Todos</div>
+      <div className='todo-task-header'>
+        <div className='todo-task-title'>Todos</div>
 
-        <span className="todo-count">
-          {todos?.data?.length || 0} pending
-        </span>
+        <span className='todo-count'>{todos?.data?.length || 0} pending</span>
       </div>
 
-      <ul className="todo-list">
+      <ul className='todo-list'>
         {todos?.data?.map((todo) => {
           return (
-            <li className="todo-item" key={todo.id}>
-              <div className="todo-content">
-                <div className="todo-name">{todo.name}</div>
-                <div className="todo-description">
-                  {todo.description}
-                </div>
+            <li className='todo-item' key={todo.id}>
+              <div className='todo-content'>
+                <div className='todo-name'>{todo.name}</div>
+                <div className='todo-description'>{todo.description}</div>
               </div>
 
-              <div className="todo-actions">
-                <button className="icon-btn edit"
-                  onClick={() => handleUpdateTask(todo)}>
+              <div className='todo-actions'>
+                <button
+                  className='icon-btn edit'
+                  onClick={() => handleUpdateTask(todo)}
+                >
                   Edit
                 </button>
 
                 <button
-                  className="icon-btn delete"
+                  className='icon-btn delete'
                   onClick={() => handleDeleteTask(todo)}
-                  disabled={deleteLoading}  >
-                  {todo.id === deletedId && deleteLoading ? "Deleting"  : "Delete"}
+                  disabled={deleteLoading}
+                >
+                  {todo.id === deletedId && deleteLoading
+                    ? "Deleting"
+                    : "Delete"}
                 </button>
               </div>
 
               <div>
-                {todo.id === deletedId && deleteError
-                  ? deleteError
-                  : ""}
+                {todo.id === deletedId && deleteError ? deleteError : ""}
               </div>
             </li>
           );
@@ -125,20 +124,13 @@ export default TodoTask;
 // import { useNavigate, useParams } from "react-router-dom";
 
 // const TodoTask = () => {
-//   const [tasks, setTasks] = useState([]);
 //   const [taskTitle, setTaskTitle] = useState("");
 //   const [taskDescription, setTaskDescription] = useState("");
 //   const [loading, setLoading] = useState(false);
+//   const [error , setError ] = useState("");
 
 //   const { id } = useParams();
 //   const navigate = useNavigate();
-
-//   // Get all tasks
-//   useEffect(() => {
-//     fetch("http://localhost:3000/get-task")
-//       .then((response) => response.json())
-//       .then((data) => setTasks(data));
-//   }, []);
 
 //   // If id exists, get that task for updating ........"Server, give me only the task whose ID is 2."
 //   useEffect(() => {
@@ -151,14 +143,24 @@ export default TodoTask;
 //         });
 //     }
 //   }, [id]);
+
 //   function CreateTask(e) {
 //     e.preventDefault();
-//     if (taskTitle.trim() === "" || taskDescription.trim() === "") {
+// if(loading){
+//return   }
+
+//setLoading(true);
+//     if (!taskTitle || taskDescription) {
+//setError("please enter task title and description ");
+//       return;
+//     }
+//     if (taskTitle.length < 3  || taskDescription.length <3 ) {
+//setError("please enter task title and description more than 3 characters ");
 //       return;
 //     }
 
-//     setLoading(true);
-//     setTimeout(() => {
+
+
 //       const task = {
 //         name: taskTitle,
 //         description: taskDescription,
@@ -177,11 +179,17 @@ export default TodoTask;
 //           .then((data) => {
 //             console.log("Updated:", data);
 
-//             setTaskTitle("");
-//             setTaskDescription("");
+//            
+   //if(data.success){
+//           setTaskTitle("");
+//           setTaskDescription("");
+//           setLoading(false);
+//            navigate("/task");
+//}
+//else{
+  //setError("something is wrong try again");
+  //}
 
-//             setLoading(false);
-//             navigate("/task");
 //           })
 //           .catch((error) => {
 //             console.log(error);
@@ -202,20 +210,21 @@ export default TodoTask;
 //         .then((response) => response.json())
 //         .then((data) => {
 //           console.log("Created:", data);
-
+     //if(data.success){
 //           setTaskTitle("");
 //           setTaskDescription("");
-
 //           setLoading(false);
 //           navigate("/todos");
+//}
+//else{
+  //setError("something is wrong try again");
+  //}
 //         })
 //         .catch((error) => {
 //           console.log(error);
 //           setLoading(false);
 //         });
-//     }, 2000);
 //   }
-
 //   return (
 //     <div className='todo-task'>
 //       <h3>{id ? "Update Task" : "Create Task"}</h3>
@@ -226,7 +235,7 @@ export default TodoTask;
 //           value={taskTitle}
 //           onChange={(e) => setTaskTitle(e.target.value)}
 //         />
-
+//           {error ? error : ""}
 //         <input
 //           placeholder='Enter task description'
 //           value={taskDescription}
